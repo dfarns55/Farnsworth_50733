@@ -190,6 +190,9 @@ print("\n")
 
 print("###########################################################")
 print("Exercise 6.1: Curcuit of Resistors: Just for fun!")
+print("I fixed the glitch! The problem was that the 2 resistors that")
+print("were vertical would not show as a zigzag because I needed to")
+print("calculate the rotation angle to get it to view...lol")
 print("###########################################################")
 print("\n")
 
@@ -220,7 +223,8 @@ G.add_nodes_from(nodes.keys())
 G.add_edges_from(edges)
 
 # Create figure and axis
-fig, ax = plt.subplots(figsize=(6, 6))
+fig, ax = plt.subplots(figsize=(8.5, 11))
+ax.set_aspect("equal")
 
 # Draw straight wire connections behind the nodes
 nx.draw_networkx_edges(G, nodes, edgelist=edges, ax=ax, edge_color="gray", width=2, alpha=0.5)
@@ -231,35 +235,37 @@ nx.draw_networkx_labels(G, nodes, font_size=10, ax=ax)
 
 
 # Function to draw a small zigzag resistor in the middle of an edge
-def draw_resistor(nx, start, end, num_zags=5, amplitude=0.1, length_ratio=0.3):
+def draw_resistor(ax, start, end, num_zags=9, amplitude=0.1, length=0.5):
     """Draws a small zigzag resistor in the middle portion of a wire."""
     x1, y1 = start
     x2, y2 = end
 
-    # compute jags
-    delta_x = x2 - x1
-    delta_y = y2 - y1
-    length = np.sqrt(delta_x**2 + delta_y**2)
-    h_zag = amplitude * (delta_y / length)
-    v_zag = amplitude * (delta_x / length)
+    # Identify the angle between the two points
+    theta = np.arctan2(y2 - y1, x2 - x1)
 
-    # Compute middle segment for zigzag
+    # Rotation matrix to rotate the zigzag shape to the line's direction
+    rotation_matrix = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
+
+    # Define the horizontal zag shape centered at (0, 0)
+    t = np.linspace(0, 1, num_zags * 2 + 1)
+    x = np.linspace(-length / 2.0, length / 2.0, len(t))  # Horizontal length of zigzag
+    y = amplitude * np.sin(t * np.pi * num_zags)  # Sinusoidal zigzag
+    zag = np.vstack((x, y))  # Combine x and y for zigzag shape
+
+    # Compute the midpoint of the line segment
     mid_x = (x1 + x2) / 2
     mid_y = (y1 + y2) / 2
 
-    # Define the portion of the line where the resistor is drawn
-    zig_start_x = x1 + (x2 - x1) * 0.4
-    zig_end_x = x1 + (x2 - x1) * 0.6
-    zig_start_y = y1 + (y2 - y1) * 0.4
-    zig_end_y = y1 + (y2 - y1) * 0.6
+    # Rotate the zigzag shape
+    final = rotation_matrix.dot(zag)
 
-    t = np.linspace(0, 1, num_zags * 2 + 1)
+    # Translate the rotated zigzag so it is centered between the points (x1, y1) and (x2, y2)
+    # Move the midpoint of the rotated zag to (mid_x, mid_y)
+    final_x = final[0, :] + mid_x
+    final_y = final[1, :] + mid_y
 
-    # Zigzag pattern only in the middle portion
-    zigzag_x = np.linspace(zig_start_x, zig_end_x, len(t)) - h_zag * np.sin(t * np.pi * num_zags)  # - v_zag * np.sin(t * np.pi * num_zags)
-    zigzag_y = np.linspace(zig_start_y, zig_end_y, len(t)) + v_zag * np.sin(t * np.pi * num_zags)  # + v_zag * np.cos(t * np.pi * num_zags)
-
-    ax.plot(zigzag_x, zigzag_y, "k", lw=2)
+    # Plot the rotated and translated zigzag
+    ax.plot(final_x, final_y, "k", lw=2)
 
 
 # Draw resistors as small zigzags in the middle of edges
