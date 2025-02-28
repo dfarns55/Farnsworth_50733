@@ -189,7 +189,7 @@ print("\n")
 
 
 print("###########################################################")
-print("Exercise 6.1: Curcuit of Resistors: Just for fun! However, I could not get the resistors on the verical to show...")
+print("Exercise 6.1: Curcuit of Resistors: Just for fun!")
 print("###########################################################")
 print("\n")
 
@@ -231,10 +231,17 @@ nx.draw_networkx_labels(G, nodes, font_size=10, ax=ax)
 
 
 # Function to draw a small zigzag resistor in the middle of an edge
-def draw_resistor(nx, start, end, num_zags=3, amplitude=0.1, length_ratio=0.3):
+def draw_resistor(nx, start, end, num_zags=5, amplitude=0.1, length_ratio=0.3):
     """Draws a small zigzag resistor in the middle portion of a wire."""
     x1, y1 = start
     x2, y2 = end
+
+    # compute jags
+    delta_x = x2 - x1
+    delta_y = y2 - y1
+    length = np.sqrt(delta_x**2 + delta_y**2)
+    h_zag = amplitude * (delta_y / length)
+    v_zag = amplitude * (delta_x / length)
 
     # Compute middle segment for zigzag
     mid_x = (x1 + x2) / 2
@@ -249,8 +256,8 @@ def draw_resistor(nx, start, end, num_zags=3, amplitude=0.1, length_ratio=0.3):
     t = np.linspace(0, 1, num_zags * 2 + 1)
 
     # Zigzag pattern only in the middle portion
-    zigzag_x = np.linspace(zig_start_x, zig_end_x, len(t))
-    zigzag_y = np.linspace(zig_start_y, zig_end_y, len(t)) + amplitude * np.sin(t * np.pi * num_zags)
+    zigzag_x = np.linspace(zig_start_x, zig_end_x, len(t)) - h_zag * np.sin(t * np.pi * num_zags)  # - v_zag * np.sin(t * np.pi * num_zags)
+    zigzag_y = np.linspace(zig_start_y, zig_end_y, len(t)) + v_zag * np.sin(t * np.pi * num_zags)  # + v_zag * np.cos(t * np.pi * num_zags)
 
     ax.plot(zigzag_x, zigzag_y, "k", lw=2)
 
