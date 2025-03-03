@@ -287,10 +287,10 @@ print("###########################################################")
 print("\n")
 
 # variable(V1, V2, V3, V4) coefficients matrix A based on KCL equations
-A = np.array([[3, -1, -1, 0],  # Equation at V1
+A = np.array([[4, -1, -1, -1],  # Equation at V1
            [-1, 3, 0, -1],    # Equation at V2
            [-1, 0, 3, -1],    # Equation at V3
-           [0, -1, -1, 3]], dtype=float)  # Equation at V4
+           [-1, -1, -1, 4]], dtype=float)  # Equation at V4
 
 # Define the Right-hand side constant coefficients matrix
 B = np.array([5, 0, 5, 0], dtype=float)
