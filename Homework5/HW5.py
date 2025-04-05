@@ -3,8 +3,6 @@
 """
 HW5.py
 
- 
-
 Author: Danette Farnsworth
 Date: 2025-03-29
 """
