@@ -188,7 +188,6 @@ def runge_kutta_4(f, r0, t0, t_end, h):
         t = t_values[i]
         r = r_values[i]
         k1 = h * f(r, t)
-plt.figure(figsize=(10, 6))
         k2 = h * f(r + 0.5 * k1, t + 0.5 * h)
         k3 = h * f(r + 0.5 * k2, t + 0.5 * h)
         k4 = h * f(r + k3, t + h)
@@ -210,6 +209,7 @@ x_values = r_values[:, 0]
 y_values = r_values[:, 1]
 
 # Plot the results
+plt.figure(figsize=(10, 6))
 plt.plot(t_values, x_values, label="Rabbits (x)", color="green", linestyle="--")
 plt.plot(t_values, y_values, label="Foxes (y)", color="pink")
 plt.xlabel("Time (t)", fontsize=14)
