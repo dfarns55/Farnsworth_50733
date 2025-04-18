@@ -1,0 +1,6 @@
+Danette.py
+pyproject.toml
+Danette.egg-info/PKG-INFO
+Danette.egg-info/SOURCES.txt
+Danette.egg-info/dependency_links.txt
+Danette.egg-info/top_level.txt

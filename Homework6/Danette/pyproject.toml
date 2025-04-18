@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools"]
+build-backed = "setuptools.build_meta"
+
+[project]
+name = "Danette"
+description = "Danette's functions"
+version = "0.1"
+authors = [ { name = "Danette Farnsworth", email = "none@none.com" } ]
+
